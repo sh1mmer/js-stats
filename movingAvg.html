@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Moving Average</title>
+	<meta name="generator" content="TextMate http://macromates.com/">
+	<meta name="author" content="Tom Hughes-Croucher">
+	<!-- Date: 2009-04-04 -->
+    <link href="../examples/layout.css" rel="stylesheet" type="text/css"></link>
+    <!--[if IE]><script type="text/javascript" src="../excanvas.pack.js"></script><![endif]-->
+    <script type="text/javascript" src="http://yui.yahooapis.com/combo?2.7.0/build/yahoo-dom-event/yahoo-dom-event.js"></script>
+    <script type="text/javascript" src="http://kid666.com/yui.flot.js"></script>
+    <script type="text/javascript" src="jsstats.js"></script>
+</head>
+<body>
+<div id="placeholder" style="width: 600px; height: 300px;"></div>
+<p id="choices">Show:</p>
+
+<script type="text/javascript" charset="utf-8">
+
+testData = [5, 10, 15, 30, 45, 60, 10, 90, 10, 90, 10, 23, 23, 45, 10, 15, 25, 50, 90, 100, 70, 85, 15, 35, 40, 45, 40, 40, 35, 40, 50, 90, 100, 150];
+
+
+cumSmoothedData = movingAverage.cumulative(testData, 2);
+cumtwothirdsSmoothedData = movingAverage.cumulative(testData, 2, 0.66);
+cumhalfSmoothedData = movingAverage.cumulative(testData, 2, 0.5);
+expSmoothedData = movingAverage.exponential(testData, 0.3);
+
+function seriesToPlotPoints(data, label) {
+    points = [];
+    for(var i=0;i<data.length;i++) {
+        points.push([i+1, data[i]]);
+    }
+    return points;
+}
+
+datasets = { 
+    "raw":{label: "Raw Data", "data": seriesToPlotPoints(testData)},
+    "exponential":{label: "Exponential", "data": seriesToPlotPoints(expSmoothedData)},
+    "cumulative":{label: "Cumulative", "data": seriesToPlotPoints(cumSmoothedData)},
+    "cumulative0.5":{label: "Cumulative 1/2", "data": seriesToPlotPoints(cumhalfSmoothedData)},
+    "cumulative0.66":{label: "Cumulative 2/3", "data": seriesToPlotPoints(cumtwothirdsSmoothedData)}
+};
+
+var i = 0;
+var choiceContainer = YAHOO.util.Dom.get("choices");
+
+for(var key in datasets) {
+    // hard-code color indices to prevent them from shifting as
+    // countries are turned on/off
+    datasets[key].color = i++;
+
+    // insert checkboxes 
+    choiceContainer.innerHTML += '<br/><input type="checkbox" name="' + key +
+                           '" checked="checked" >' + datasets[key].label + '</input>';
+};
+
+function plotAccordingToChoices() {
+  var data = [];
+
+  var inputs = choiceContainer.getElementsByTagName("input");
+  for(var i=0; i<inputs.length; i++) {
+      if(!inputs[i].checked)
+          continue;
+
+      var key = inputs[i].name;
+      if (key && datasets[key])
+          data.push(datasets[key]);
+  };
+
+  if( data.length > 0 ) {
+    YAHOO.widget.Flot( 'placeholder', data);
+  }
+}
+
+YAHOO.util.Event.on(choiceContainer.getElementsByTagName("input"), "click", plotAccordingToChoices);
+
+// do initial drawing (all choices selected)
+plotAccordingToChoices();
+
+
+</script>
+</body>
+</html>

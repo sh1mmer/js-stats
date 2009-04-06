@@ -7,68 +7,14 @@
 	<title>Standard Deviation</title>
 	<meta name="generator" content="TextMate http://macromates.com/">
 	<meta name="author" content="Tom Hughes-Croucher">
-	<!-- Date: 2009-04-04 -->
+	<script type="text/javascript" charset="utf-8" src="jsstats.js"></script>
 </head>
 <body>
 <script type="text/javascript" charset="utf-8">
 
 testData = [1, 3, 4, 6, 9, 19];
 
-standardDeviation = {
-    
-    standardDeviation : function(inputArray) {
-
-        //Step 1 Calculate the mean
-        mean = this.arraySum(inputArray)/testData.length;
-
-        //Step 2 Calculate the deviation for each item with the mena
-        deviations = this.calculateDeviations(inputArray, mean);
-
-        //Step 3 Square the deviations
-        sqDeviations = this.squareArray(deviations);
-
-        //Step 4 Sum the Squares of the deviations
-        total = this.arraySum(sqDeviations);
-
-        //Step 5 Calculate the standard deviation
-        stdDev = Math.sqrt(total/(sqDeviations.length-1));
-        
-        return stdDev;
-        
-    },
-    
-    /*
-    * Adapted from http://www.gscottolson.com/weblog/2007/12/09/sum-array-prototype-for-javascript/
-    * I'm not a big fan of messing with the Prototypes of default objects so here is that sum 
-    * method as a stand-alone function
-    */
-    arraySum : function(inputArray) {
-          return (! inputArray.length) ? 0 : arraySum(inputArray.slice(1)) +
-              ((typeof inputArray[0] == 'number') ? inputArray[0] : 0);  
-    },
-
-    /*
-    * Calculate the deviations for each array element
-    * I should possibly implement this with slice, as above, once I profile which is more efficient
-    */
-    calculateDeviations : function(inputArray, mean) {
-        for(var i=0;i<inputArray.length;i++) {
-            inputArray[i] -= mean;
-        }
-        return inputArray;
-    },
-    
-    /*
-    * Calculate the square for each array element
-    * I should possibly implement this with slice, as above, once I profile which is more efficient
-    */
-    squareArray : function(inputArray) {
-        for(var i=0;i<inputArray.length;i++) {
-            inputArray[i] *= inputArray[i];
-        }        
-        return inputArray;
-    }    
-};
+alert("The standard deviation of 1, 3, 4, 5, 9, 19 is: " + standardDeviation.calculateDeviation(testData));
     
 </script>
 </body>
