@@ -50,16 +50,51 @@ movingAverage = {
     * factor - smoothing factor used 
     */
     exponential : function(data, factor) {
-        avgData = [];
+		if (!factor) {
+			factor = 0;
+		} else if (factor < 0 || factor > 1) {
+			throw "Factor must be equal or greater than 0 and less than or equal to 1";
+		}
+
+        smoothedData = [];
         //set first average to first data item as seed
-        avgData[0] = data[0];
+        smoothedData[0] = data[0];
         
         //start at 1 since we can't average the first result
         for(var i=1;i<data.length;i++) {
-            avgData[i] = factor * data[i] + (1 - factor) * avgData[i-1];
+            smoothedData[i] = factor * data[i] + (1 - factor) * smoothedData[i-1];
         }
         
-        return avgData;
+        return smoothedData;
+    },
+
+    doubelExponential : function(data, smoothFactor, trendFactor) {
+		if (!smoothFactor) {
+			smoothFactor = 0;
+		} else if (smoothFactor < 0 || smoothFactor > 1) {
+			throw "Smoothin factor must be equal or greater than 0 and less than or equal to 1";
+		}
+		if (!trendFactor) {
+			trendFactor = 0;
+		} else if (trendFactor < 0 || trendFactor > 1) {
+			throw "Trend factor must be equal or greater than 0 and less than or equal to 1";
+		}
+
+        smoothedData = [];
+        trendData = [];
+
+		smoothedData[0] = data[0];
+		trendData[0] = data[1] - data[0];
+
+		for(i=1;i<data.length;i++) {
+
+			smoothedData[i] = (smoothFactor * data[i]) + ((1 - smoothFactor) * (smoothedData[i-1] + trendData[i-1]));
+			trendData[i] = (trendFactor * (smoothedData[i] - smoothedData[i-1])) + ((1 - trendFactor) * trendData[i-1]);
+
+		}
+
+		//return smoothed data
+		return smoothedData;
     }
 };
 

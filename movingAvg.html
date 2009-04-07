@@ -27,6 +27,7 @@ cumSmoothedData = movingAverage.cumulative(testData, 2);
 cumtwothirdsSmoothedData = movingAverage.cumulative(testData, 2, 0.66);
 cumhalfSmoothedData = movingAverage.cumulative(testData, 2, 0.5);
 expSmoothedData = movingAverage.exponential(testData, 0.3);
+dblExpSmoothedData = movingAverage.doubelExponential(testData, 0.6, 0.4);
 
 function seriesToPlotPoints(data, label) {
     points = [];
@@ -38,6 +39,7 @@ function seriesToPlotPoints(data, label) {
 
 datasets = { 
     "raw":{label: "Raw Data", "data": seriesToPlotPoints(testData)},
+    "doubleExponential":{label: "Double Exponential", "data": seriesToPlotPoints(dblExpSmoothedData)},
     "exponential":{label: "Exponential", "data": seriesToPlotPoints(expSmoothedData)},
     "cumulative":{label: "Cumulative", "data": seriesToPlotPoints(cumSmoothedData)},
     "cumulative0.5":{label: "Cumulative 1/2", "data": seriesToPlotPoints(cumhalfSmoothedData)},
